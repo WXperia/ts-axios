@@ -9,3 +9,6 @@ export function isObject(val?: any): val is Object {
 export function isPlainObject(val: any): val is Object {
     return OBJ_PROTO_TOSTRING.call(val) === '[object Object]'
 }
+export function isString(val: any):val is string {
+    return OBJ_PROTO_TOSTRING.call(val) === '[object String]'
+}
