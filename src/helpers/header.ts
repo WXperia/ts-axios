@@ -29,10 +29,10 @@ export function parseResponseHeaders(responseHeaders: string): any {
     responseHeaders.split('\r\n').forEach(value => {
         let [key, val] = value.split(':')
         key = key.trim().toLowerCase()
-        if(!key){
+        if (!key) {
             return
         }
-        if(val){
+        if (val) {
             val = val.trim().toLowerCase()
         }
         parsed[key] = val

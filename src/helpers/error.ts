@@ -1,4 +1,4 @@
-import { AxiosRequestConfig,AxiosResponse } from "../types"
+import { AxiosRequestConfig, AxiosResponse } from "../types"
 
 export class AxiosError extends Error {
     isAxiosError: boolean
@@ -12,7 +12,7 @@ export class AxiosError extends Error {
         code?: string | null,
         request?: any,
         response?: AxiosResponse,
-    ){
+    ) {
         super(message)
         this.config = config
         this.code = code
@@ -30,8 +30,8 @@ export function ErrorFactory(
     code?: string | null,
     request?: any,
     response?: AxiosResponse,
-){
-  const error =   new AxiosError(message,config,code,request,response)
-  return error
-  
+) {
+    const error = new AxiosError(message, config, code, request, response)
+    return error
+
 }

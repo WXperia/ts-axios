@@ -1,6 +1,6 @@
-import { AxiosRequestConfig, AxiosResponse, AxiosPromise } from './types'
-import { parseResponseHeaders } from './helpers/header';
-import {ErrorFactory} from './helpers/error'
+import { AxiosRequestConfig, AxiosResponse, AxiosPromise } from '../types'
+import { parseResponseHeaders } from '../helpers/header';
+import { ErrorFactory } from '../helpers/error'
 import { request } from 'http';
 export function xhr(config: AxiosRequestConfig): AxiosPromise {
     return new Promise((resolve, reject) => {
@@ -12,9 +12,9 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
         if (timeout) {
             XHR.timeout = timeout
         }
-        XHR.open(method.toUpperCase(), url, isasync)
+        XHR.open(method.toUpperCase(), url!, isasync)
         //header 当 data为空时删除 header
-        
+
         XHR.onreadystatechange = function handleLoad() {
             /* 
                 0	UNSENT	代理被创建，但尚未调用 open() 方法。
@@ -24,12 +24,12 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
                 4	DONE	下载操作已完成。
             */
             if (XHR.readyState !== 4) {
-                return 
+                return
             }
             if (XHR.status === 0) {
-                return 
+                return
             }
-            
+
             const responseHeader = parseResponseHeaders(XHR.getAllResponseHeaders())
             const responseData = responseType === 'text' ? XHR.responseText : XHR.response
             const response: AxiosResponse = {
@@ -46,17 +46,17 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
             error
         */
         XHR.onerror = function handleError() {
-            return reject(ErrorFactory('NetWork Error',config,null,request))
+            return reject(ErrorFactory('NetWork Error', config, null, XHR))
         }
-        XHR.ontimeout = function handleTimeOut(){
-            return reject(ErrorFactory(`TimeOut of ${timeout}`,config,'ECONNABORTED',request))
+        XHR.ontimeout = function handleTimeOut() {
+            return reject(ErrorFactory(`TimeOut of ${timeout}`, config, 'ECONNABORTED', XHR))
         }
-        function handleResponse(response: AxiosResponse){
-            if(response.status>=200 && response.status<=300){
+        function handleResponse(response: AxiosResponse) {
+            if (response.status >= 200 && response.status <= 300) {
                 resolve(response)
-            }else {
-                
-                reject(ErrorFactory(`Request faild width status ${response.status}`,config,null,request,response))
+            } else {
+
+                reject(ErrorFactory(`Request faild width status ${response.status}`, config, null, request, response))
             }
         }
         Object.keys(headers).forEach(name => {
