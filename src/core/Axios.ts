@@ -11,8 +11,10 @@ interface PromiseChain<T> {
     rejected?: RejectFn
 }
 export default class Axios {
+    defaults: AxiosRequestConfig
     interceptors: interceptors
-    constructor() {
+    constructor(defaultsConfig:AxiosRequestConfig) {
+        this.defaults = defaultsConfig
         this.interceptors = {
             request: new interceptorManager<AxiosRequestConfig>(),
             response: new interceptorManager<AxiosResponse>()

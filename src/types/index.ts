@@ -11,6 +11,7 @@ export interface AxiosRequestConfig {
     responseType?: XMLHttpRequestResponseType
     isJSON?: boolean
     timeout?: number
+    [propsName:string]: any
 }
 export interface AxiosResponse<T = any> {
     //从服务端接受回的对象格式
@@ -35,6 +36,7 @@ export interface AxiosError extends Error {
 
 export interface Axios {
     //兼容Axios实现的接口
+    default: AxiosRequestConfig
     request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
     get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
