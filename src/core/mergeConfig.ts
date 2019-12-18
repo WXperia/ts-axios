@@ -8,7 +8,7 @@ function defaultStrat(val1?: any, val2?: any): any {
 function stratFromVal2(val1?: any, val2?: any): any {
    if(typeof val2 !== 'undefined') return val2
 }
-function deepMerge(...objs: any){
+export function deepMerge(...objs: any){
     const result = Object.create(null)
 
     Object.keys(objs).forEach(key=>{
@@ -17,13 +17,18 @@ function deepMerge(...objs: any){
             Object.keys(obj).forEach(key=>{
                 let val = obj[key]
                 if(isPlainObject(val)){
-                    deepMerge(val)
+                    if(isPlainObject(result[key])){
+                        result[key] = deepMerge(result[key],val)
+                    }else {
+                        result[key] = deepMerge(val)
+                    }
                 }else {
                     result[key] = val   
                 }
             })
         }
     })
+    return result
 }
 //深度合并策略
 function deepMergeStrat(val1?:any,val2?:any) {
@@ -38,7 +43,7 @@ function deepMergeStrat(val1?:any,val2?:any) {
     }
 }
 const stratKeysFromVal2 = ['data', 'params', 'url']
-const deepMergeStratKeys = ['header']
+const deepMergeStratKeys = ['headers']
 deepMergeStratKeys.forEach(key=>{
     strats[key] = deepMergeStrat
 })
@@ -47,15 +52,12 @@ stratKeysFromVal2.forEach(key => {
 })
 
 
-export default function mergeConfig(config1: AxiosRequestConfig, config2?: AxiosRequestConfig) {
+export default function mergeConfig(config1: AxiosRequestConfig, config2?: AxiosRequestConfig):AxiosRequestConfig {
     if(!config2){
         config2 = {}
     }
     const config = Object.create(null)
-    function mergeField(key: string){
-        const strat = strats[key] || defaultStrat
-        config[key] = strat(config1[key],config2![key])
-    }
+    
     for(let key in config2){
         mergeField(key)
     }
@@ -64,4 +66,9 @@ export default function mergeConfig(config1: AxiosRequestConfig, config2?: Axios
             mergeField(key)
         }
     }
+    function mergeField(key: string){
+        const strat = strats[key] || defaultStrat
+        config[key] = strat(config1[key],config2![key])
+    }
+    return config
 }

@@ -6,7 +6,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { xhr } from './xhr'
 import { buildURL } from '../helpers/url'
 import { transFormRequest, transFormResponse } from '../helpers/data'
-import { processHeaders } from '../helpers/header'
+import { processHeaders ,faltterHeaders} from '../helpers/header'
 function requestDispatch(config: AxiosRequestConfig): AxiosPromise {
     //TODO
     processConfig(config)
@@ -20,7 +20,7 @@ function processConfig(config: AxiosRequestConfig): void {
     config.headers = transfromHeaders(config)
     config.url = transformURL(config)
     config.data = transfromData(config)
-
+    config.headers = faltterHeaders(config.headers,config.method!)
 }
 function transformURL(config: AxiosRequestConfig): string {
     const { url, params } = config

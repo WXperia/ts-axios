@@ -1,8 +1,9 @@
 import { AxiosInstance, AxiosRequestConfig } from "./types";
 import Axios from './core/Axios'
 import { extend } from "./helpers/util";
-import defaults from "./default";
+import defaults from "./defaults";
 function createInstance(config:AxiosRequestConfig): AxiosInstance {
+    console.log(config)
     //这里实现的是 axios.post / get /等.方法
     const context  = new Axios(config);
     //这里实现的是 axios({url:'',method:'',headers:{}})方法

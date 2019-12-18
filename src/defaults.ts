@@ -11,7 +11,7 @@ import { AxiosRequestConfig } from "./types";
     timeout: 0,
 }
 
-const methodsWithNoData = ['get','delete','head','option']
+const methodsWithNoData = ['get','delete','head','options']
 const methodsWithData = ['post','put','patch']
 
 methodsWithNoData.forEach(method=>{
@@ -19,7 +19,7 @@ methodsWithNoData.forEach(method=>{
 })
 methodsWithData.forEach(method=>{
     defaults.headers[method] = {
-        'Content-Type': 'application/x-www-form-urlencode'
+        'Content-Type': 'application/x-www-form-urlencoded'
     }
 })
 

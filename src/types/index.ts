@@ -36,7 +36,7 @@ export interface AxiosError extends Error {
 
 export interface Axios {
     //兼容Axios实现的接口
-    default: AxiosRequestConfig
+    defaults: AxiosRequestConfig
     request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
     get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
@@ -63,6 +63,7 @@ export interface AxiosInstance extends Axios {
     //函数的重载
     <T>(config: any): AxiosPromise<T>
     <T>(url: string, config: AxiosRequestConfig): AxiosPromise<T>
+    defaults: AxiosRequestConfig
 }
 export interface ResolveFn<T> {
     (val: T): T | Promise<T>
