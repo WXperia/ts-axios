@@ -55,7 +55,6 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
             if (response.status >= 200 && response.status <= 300) {
                 resolve(response)
             } else {
-
                 reject(ErrorFactory(`Request faild width status ${response.status}`, config, null, request, response))
             }
         }

@@ -154,7 +154,7 @@ function registerConfigRouter() {
   })
 }
 function registerCancelRouter() {
-  router.post('/cancel/get', function (req, res) {
+  router.get('/cancel/get', function (req, res) {
     setTimeout(() => {
       res.json('hello')
     }, 1000)
