@@ -2,15 +2,31 @@ import { AxiosRequestConfig, AxiosResponse, AxiosPromise } from '../types'
 import { parseResponseHeaders } from '../helpers/header';
 import { ErrorFactory } from '../helpers/error'
 import { request } from 'http';
+import { isURLSameOrigin } from '../helpers/url'
+import cookie from '../helpers/cookies';
 export function xhr(config: AxiosRequestConfig): AxiosPromise {
     return new Promise((resolve, reject) => {
-        const { url, method = 'get', data = null, params = null, isasync = true, headers, responseType = 'json', timeout , cancelToken} = config
+        const { url,
+            method = 'get',
+            data = null,
+            params = null,
+            isasync = true,
+            headers,
+            responseType = 'json',
+            timeout,
+            cancelToken,
+            withCredentials,
+            xsrfHeaderName,
+            xsrfCookieName } = config
         const XHR = new XMLHttpRequest();
         if (responseType) {
             XHR.responseType = responseType
         }
         if (timeout) {
             XHR.timeout = timeout
+        }
+        if (withCredentials) {
+            XHR.withCredentials = withCredentials
         }
         XHR.open(method.toUpperCase(), url!, isasync)
         //header 当 data为空时删除 header
@@ -51,6 +67,12 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
         XHR.ontimeout = function handleTimeOut() {
             return reject(ErrorFactory(`TimeOut of ${timeout}`, config, 'ECONNABORTED', XHR))
         }
+        if ((withCredentials && isURLSameOrigin(url!)) && xsrfCookieName) {
+            const xsrfValue = cookie.read(xsrfCookieName)
+            if(xsrfValue && xsrfHeaderName){
+                headers[xsrfHeaderName] = xsrfValue
+            }
+        }
         function handleResponse(response: AxiosResponse) {
             if (response.status >= 200 && response.status <= 300) {
                 resolve(response)
@@ -65,13 +87,13 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
                 XHR.setRequestHeader(name, headers[name])
             }
         })
-        if(cancelToken) {
-            cancelToken.promise.then(reason=>{
+        if (cancelToken) {
+            cancelToken.promise.then(reason => {
                 XHR.abort()
                 reject(reason)
             })
         }
-        
+
         XHR.send(data)
     })
 }

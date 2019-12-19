@@ -125,6 +125,7 @@
     "webpack": "^4.41.2",
     "webpack-dev-middleware": "^3.7.2",
     "webpack-hot-middleware": "^2.25.0",
-    "qs": "^6.7.0"
+    "qs": "^6.7.0",
+    "cookie-parser": "^1.4.4"
   }
 }
