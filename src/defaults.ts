@@ -1,6 +1,8 @@
 import { AxiosRequestConfig } from "./types";
+import { processHeaders } from "./helpers/header";
+import { transformRequest, transformResponse } from "./helpers/data";
 
- const defaults:AxiosRequestConfig = {
+const defaults: AxiosRequestConfig = {
     method: 'get',
     headers: {
         common: {
@@ -9,18 +11,31 @@ import { AxiosRequestConfig } from "./types";
 
     },
     timeout: 0,
+    transformRequest: [
+        function (data: any, headers: any): any {
+            processHeaders(headers, data)
+            return transformRequest(data)
+        }
+    ],
+    transformResponse: [
+        function (data: any): any {
+          return transformResponse(data)
+        }
+    ]
 }
 
-const methodsWithNoData = ['get','delete','head','options']
-const methodsWithData = ['post','put','patch']
+const methodsNoData = ['delete', 'get', 'head', 'options']
 
-methodsWithNoData.forEach(method=>{
-    defaults.headers[method] = {}
+methodsNoData.forEach(method => {
+  defaults.headers[method] = {}
 })
-methodsWithData.forEach(method=>{
-    defaults.headers[method] = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
+
+const methodsWithData = ['post', 'put', 'patch']
+
+methodsWithData.forEach(method => {
+  defaults.headers[method] = {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  }
 })
 
 export default defaults

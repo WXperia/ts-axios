@@ -14,8 +14,8 @@ interface PromiseChain<T> {
 export default class Axios {
     defaults: AxiosRequestConfig
     interceptors: interceptors
-    constructor(defaultsConfig: AxiosRequestConfig) {
-        this.defaults = defaultsConfig
+    constructor(initConfig: AxiosRequestConfig) {
+        this.defaults = initConfig
         this.interceptors = {
             request: new interceptorManager<AxiosRequestConfig>(),
             response: new interceptorManager<AxiosResponse>()
@@ -55,13 +55,13 @@ export default class Axios {
 
     _requestMethodWithOutData(url: string, method: Method, config?: AxiosRequestConfig): AxiosPromise {
         //使用object.assign 如果有相同key会优先保留第二个对象key的值
-        return requestDispatch(Object.assign(config || {}, {
+        return this.request(Object.assign(config || {}, {
             method,
             url
         }))
     }
     _requestMethodWithData(url: string, method: Method, data?: any, config?: AxiosRequestConfig): AxiosPromise {
-        return requestDispatch(Object.assign(config || {}, {
+        return this.request(Object.assign(config || {}, {
             method,
             url,
             data

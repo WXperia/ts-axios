@@ -26,7 +26,7 @@ export function processHeaders(headers: any, data: any): any {
 export function parseResponseHeaders(responseHeaders: string): any {
     let parsed = Object.create(null)
     if (!responseHeaders) {
-        return
+        return parsed
     }
     responseHeaders.split('\r\n').forEach(value => {
         let [key, val] = value.split(':')

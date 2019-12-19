@@ -11,7 +11,10 @@ export interface AxiosRequestConfig {
     responseType?: XMLHttpRequestResponseType
     isJSON?: boolean
     timeout?: number
-    [propsName:string]: any
+    [propsName: string]: any
+    transformRequest?: AxiosTransformer | AxiosTransformer[]
+    transformResponse?: AxiosTransformer | AxiosTransformer[]
+    cancelToken?: CancelToken
 }
 export interface AxiosResponse<T = any> {
     //从服务端接受回的对象格式
@@ -65,6 +68,12 @@ export interface AxiosInstance extends Axios {
     <T>(url: string, config: AxiosRequestConfig): AxiosPromise<T>
     defaults: AxiosRequestConfig
 }
+export interface AxiosStatic extends AxiosInstance {
+    create(config?: AxiosRequestConfig): AxiosInstance
+    CancelToken: CancelTokenStatic
+    Cancel: CancelStatic
+    isCancel(value: any): boolean
+}
 export interface ResolveFn<T> {
     (val: T): T | Promise<T>
 }
@@ -75,4 +84,38 @@ export interface RejectFn {
 export interface AxiosInterceptorManager<T> {
     use(resolved: ResolveFn<T>, rejected?: RejectFn): number
     eject(id: number): void
+}
+
+export interface AxiosTransformer {
+    (data: any, headers?: any): any
+}
+export interface CancelToken {
+    promise: Promise<Cancel>
+    reason?: Cancel
+    throwIfRequested():void
+}
+
+export interface Canceler {
+    (messgage?: string): void
+}
+
+export interface CancelExcutor {
+    (cancel: Canceler): void
+}
+
+export interface CancelTokenSource {
+    token: CancelToken
+    cancel: Canceler
+}
+
+export interface CancelTokenStatic {
+    new(executor: CancelExcutor): CancelToken
+    source(): CancelTokenSource
+}
+
+export interface Cancel {
+    message?: string
+}
+export interface CancelStatic {
+    new(message?: string): Cancel
 }
