@@ -18,6 +18,8 @@ export interface AxiosRequestConfig {
     withCredentials?: boolean
     xsrfCookieName?: string
     xsrfHeaderName?: string
+    onDownloadProgess?: (event: ProgressEvent) => void
+    onUploadProgess?: (event: ProgressEvent) => void
 }
 export interface AxiosResponse<T = any> {
     //从服务端接受回的对象格式
