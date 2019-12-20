@@ -183,6 +183,7 @@ function registerMoreRouter() {
     res.json(req.body)
   })
   router.post('/more/upload', function (req, res) {
+    res.json(req.body)
     console.log(req.files)
   })
 }

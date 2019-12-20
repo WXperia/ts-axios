@@ -1,4 +1,5 @@
 import axios, { AxiosError } from '../../src/index'
+import $ from 'jquery'
 import { Input } from 'normalize-package-data'
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
@@ -37,7 +38,7 @@ function loadProgressBar() {
     const setupUpdateProgress = () => {
         const update = (e: ProgressEvent) => {
             console.log(e)
-            NProgress.set(calculatePercentage(e.loaded,e.total))
+            NProgress.set(calculatePercentage(e.loaded, e.total))
         }
         axios.defaults.onDownloadProgess = update
         axios.defaults.onUploadProgess = update
@@ -66,10 +67,28 @@ const fr: FileReader = new FileReader()
 console.log(formData)
 const btn = document.getElementById('upLoad')
 const fileInput: Input = document.getElementById('fileUpload') as HTMLInputElement
+// const handleUpload = function (e: Event): void {
+//     if (fileInput.files) {
+//         formData.append('file', fileInput.files[0])
+//         axios.post('/more/upload', formData)
+//     }
+// }
 const handleUpload = function (e: Event): void {
+    formData.append('file', fileInput.files[0])
+    formData.append('name', '12')
+    formData.append('user', 'xzq')
     if (fileInput.files) {
-        formData.append('file', fileInput.files[0])
-        axios.post('/more/upload', formData)
+        $.ajax({
+            type: 'POST',
+            url: '/more/upload',
+            data: formData,
+            contentType: false,
+            processData: false,
+            // mimeType: "multipart/form-data",
+            success: function (res) {
+                console.log(res)
+            }
+        })
     }
 }
 const handelOnchange = function (e: Event): void {
