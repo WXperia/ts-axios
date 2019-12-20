@@ -15,7 +15,7 @@
 
 ## 使用
 
-> npm intall
+> npm install
 >
 > npm run dev
 >  
