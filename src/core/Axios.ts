@@ -1,5 +1,5 @@
 import { AxiosRequestConfig, AxiosPromise, Method, AxiosResponse, ResolveFn, RejectFn } from "../types";
-import requestDispatch from './requestDispatch'
+import requestDispatch, { transformURL } from './requestDispatch'
 import interceptorManager from './interceptorManager'
 import mergeConfig from "./mergeConfig";
 
@@ -88,5 +88,8 @@ export default class Axios {
     patch(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise {
         return this._requestMethodWithData(url, 'patch', data, config)
     }
-
+    getUri(config?:AxiosRequestConfig):string {
+        config = mergeConfig(this.defaults,config)
+        return transformURL(config)
+    }
 }

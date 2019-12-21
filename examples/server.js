@@ -7,6 +7,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
 const path = require('path')
+const atob = require('atob')
 require('./server2')
 const app = express()
 const compiler = webpack(WebpackConfig)
@@ -20,9 +21,9 @@ app.use(webpackDevMiddleware(compiler, {
 }))
 
 app.use(webpackHotMiddleware(compiler))
-app.use(express.static(__dirname,{
+app.use(express.static(__dirname, {
   setHeaders(res) {
-    res.cookie('XSRF-TOKEN-D','abcdf')
+    res.cookie('XSRF-TOKEN-D', 'abcdf')
   }
 }))
 app.use(express.static(__dirname))
@@ -32,7 +33,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(multipart({
-  uploadDir: path.resolve(__dirname,'upload-file')
+  uploadDir: path.resolve(__dirname, 'upload-file')
 }))
 const router = express.Router()
 
@@ -185,6 +186,32 @@ function registerMoreRouter() {
   router.post('/more/upload', function (req, res) {
     res.json(req.body)
     console.log(req.files)
+  })
+  router.post('/more/auth', function (req, res) {
+    const auth = req.headers.authorization
+    const [type, credentials] = auth.split(' ')
+    console.log(atob(credentials))
+
+    const [username, password] = atob(credentials).split(':')
+
+    if (type === 'Basic' && username === 'xzq'){
+      res.json(req.body)
+    }else {
+      res.status(401)
+      res.end('UnAuthorization')
+    }
+  })
+  router.get('/more/304',function(req,res){
+    res.status(304)
+    res.end()
+  })
+  router.get('/more/A',function(req,res){
+
+    res.end('A')
+  })
+  router.get('/more/B',function(req,res){
+
+    res.end('B')
   })
 }
 

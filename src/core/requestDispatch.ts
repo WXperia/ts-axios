@@ -4,7 +4,7 @@
 //import 定义config类型
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { xhr } from './xhr'
-import { buildURL } from '../helpers/url'
+import { buildURL, isAbsoluteURL, combineURL } from '../helpers/url'
 // import { transFormRequest, transFormResponse } from '../helpers/data'
 import { faltterHeaders } from '../helpers/header'
 import transform from './transfrom'
@@ -24,16 +24,19 @@ function processConfig(config: AxiosRequestConfig): void {
     config.data = transform(config.data, config.headers, config.transformRequest)
     config.headers = faltterHeaders(config.headers, config.method!)
 }
-function transformURL(config: AxiosRequestConfig): string {
-    const { url, params } = config
-    return buildURL(url!, params)
+export function transformURL(config: AxiosRequestConfig): string {
+    let { url, params, paramsSerializer,baseURL } = config
+    if(baseURL && !isAbsoluteURL(url!)){
+        url = combineURL(baseURL,url)
+    }
+    return buildURL(url!, params, paramsSerializer)
 }
 function transFormResponseData(res: AxiosResponse): AxiosResponse {
     res.data = transform(res.data, res.headers, res.config.transformResponse)
     return res
 }
-function throwIfCancellationRequested(config:AxiosRequestConfig):void{
-    if(config.cancelToken){
+function throwIfCancellationRequested(config: AxiosRequestConfig): void {
+    if (config.cancelToken) {
         config.cancelToken.throwIfRequested()
     }
 }

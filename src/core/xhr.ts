@@ -20,7 +20,10 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
             xsrfHeaderName,
             xsrfCookieName,
             onDownloadProgess,
-            onUploadProgess
+            onUploadProgess,
+            auth,
+            validateStatus,
+            baseURL
         } = config
 
         const XHR = new XMLHttpRequest();
@@ -41,7 +44,9 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
             if (withCredentials) {
                 XHR.withCredentials = withCredentials
             }
-           
+            if(auth) {
+                headers['Authorization'] = 'Basic ' + btoa(auth.username+':'+ auth.password)
+            }
         }
         function addEvent() {
             XHR.onreadystatechange = function handleLoad() {
@@ -88,7 +93,7 @@ export function xhr(config: AxiosRequestConfig): AxiosPromise {
                 XHR.upload.onprogress = onUploadProgess
             }
             function handleResponse(response: AxiosResponse) {
-                if (response.status >= 200 && response.status <= 300) {
+                if (!validateStatus || validateStatus(response.status)) {
                     resolve(response)
                 } else {
                     reject(ErrorFactory(`Request faild width status ${response.status}`, config, null, request, response))

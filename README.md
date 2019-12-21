@@ -11,6 +11,7 @@
 6. `JSON` 数据的自动转换
 7. 客户端防止 `XSRF`
 8. 完成上传和下载事件的外部回调 `onUploadProgress & onDownloadProgress`
+
 用于巩固Ts的学习成果
 
 ## 使用
@@ -19,4 +20,4 @@
 >
 > npm run dev
 >  
-> 127.0.0.1:8080 
+> 127.0.0.1:8080

@@ -19,25 +19,28 @@ const defaults: AxiosRequestConfig = {
     ],
     transformResponse: [
         function (data: any): any {
-          return transformResponse(data)
+            return transformResponse(data)
         }
     ],
     xsrfCookieName: 'XSRF-TOKEN',
-    xsrfHeaderName: 'X-XSRF-TOKEN'
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    validateStatus(status: number): boolean {
+        return status >= 200 && status < 300
+    }
 }
 
 const methodsNoData = ['delete', 'get', 'head', 'options']
 
 methodsNoData.forEach(method => {
-  defaults.headers[method] = {}
+    defaults.headers[method] = {}
 })
 
 const methodsWithData = ['post', 'put', 'patch']
 
 methodsWithData.forEach(method => {
-  defaults.headers[method] = {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  }
+    defaults.headers[method] = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
 })
 
 export default defaults

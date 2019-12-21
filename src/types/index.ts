@@ -1,3 +1,5 @@
+
+
 //T 相当于外部传入的变量类型
 //一般情况下，定义接口，只是为了外部使用时，只能使用接口暴露的方法，比如这里就只能使用到use 和 eject
 export type Method = 'get' | 'GET' | 'delete' | 'DELETE' | 'head' | 'HEAD' | 'options' | 'OPTIONS' | 'post' | 'POST' | 'put' | 'PUT' | 'patch' | 'PATCH';
@@ -20,6 +22,10 @@ export interface AxiosRequestConfig {
     xsrfHeaderName?: string
     onDownloadProgess?: (event: ProgressEvent) => void
     onUploadProgess?: (event: ProgressEvent) => void
+    auth?: AxiosBasicCredentials
+    validateStatus?: (status: number) => boolean
+    paramsSerializer?: (params: any) => string
+    baseURL?: string
 }
 export interface AxiosResponse<T = any> {
     //从服务端接受回的对象格式
@@ -65,6 +71,8 @@ export interface Axios {
         request: AxiosInterceptorManager<AxiosRequestConfig>
         response: AxiosInterceptorManager<AxiosResponse>
     }
+
+    getUri: (config?: AxiosRequestConfig) => string
 }
 
 export interface AxiosInstance extends Axios {
@@ -78,6 +86,12 @@ export interface AxiosStatic extends AxiosInstance {
     CancelToken: CancelTokenStatic
     Cancel: CancelStatic
     isCancel(value: any): boolean
+    all<T>(promises: Array<T | Promise<T>>): Promise<T[]>
+    spread<T, R>(callback: (...args: T[]) => R): (arr: T[]) => R
+    Axios: AxiosClassStatic
+}
+export interface AxiosClassStatic {
+    new(config: AxiosRequestConfig): Axios
 }
 export interface ResolveFn<T> {
     (val: T): T | Promise<T>
@@ -123,4 +137,9 @@ export interface Cancel {
 }
 export interface CancelStatic {
     new(message?: string): Cancel
+}
+
+export interface AxiosBasicCredentials {
+    username: string
+    password: string
 }

@@ -1,4 +1,4 @@
-import { isDate, isPlainObject } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 interface URLOrigin {
     protocol: string
@@ -20,36 +20,49 @@ function encode(val: string): string {
             return '%' + c.charCodeAt(0).toString(16);
         });
 }
-export function buildURL(url: string, param?: any): string {
+export function isAbsoluteURL(url: string): boolean {
+    return /(^[a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+export function combineURL(baseURL: string, relativeURL?: string):string {
+    return relativeURL? baseURL.replace(/\/+$/,'') + '/' + relativeURL.replace(/^\/+/,'') : baseURL
+}
+export function buildURL(url: string, param?: any, paramsSerializer?: (params: any) => string): string {
     // let newURL:string = '';
     if (!param) {
         return url
     }
-    const parts: string[] = [];
-    Object.keys(param).forEach(key => {
-        const value = param[key]
-        if (typeof value === 'undefined' || value === null) {
-            return
-        }
-        let values = []
-        if (Array.isArray(value)) {
-            values = value
-            key += '[]'
-        } else {
-            values = [value]
-        }
-        values.forEach(val => {
-            if (isDate(val)) {
-                val = val.toISOString()
-            } else if (isPlainObject(val)) {
-                val = JSON.stringify(val)
+    const parts: string[] = []
+    let serialzedParams
+    if (paramsSerializer) {
+        serialzedParams = paramsSerializer(param)
+    } else if (isURLSearchParams(param)) {
+        serialzedParams = param.toString()
+    } else {
+        Object.keys(param).forEach(key => {
+            const value = param[key]
+            if (typeof value === 'undefined' || value === null) {
+                return
             }
-            parts.push(`&${encode(key)}=${encode(val)}`)
+            let values = []
+            if (Array.isArray(value)) {
+                values = value
+                key += '[]'
+            } else {
+                values = [value]
+            }
+            values.forEach(val => {
+                if (isDate(val)) {
+                    val = val.toISOString()
+                } else if (isPlainObject(val)) {
+                    val = JSON.stringify(val)
+                }
+                parts.push(`&${encode(key)}=${encode(val)}`)
+            })
         })
-    })
-    let serialzedParams = parts.join('');
+        serialzedParams = parts.join('')
+    }
     if (serialzedParams) {
-        const markIndex = url.indexOf('#');
+        const markIndex = url.indexOf('#')
         if (markIndex !== -1) {
             url = url.slice(0, markIndex)
         }
