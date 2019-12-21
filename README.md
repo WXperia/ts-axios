@@ -11,8 +11,12 @@
 6. `JSON` 数据的自动转换
 7. 客户端防止 `XSRF`
 8. 完成上传和下载事件的外部回调 `onUploadProgress & onDownloadProgress`
-
-用于巩固Ts的学习成果
+9. `baseURL`
+10. `axios.all`
+11. `axios.spread`
+12. `axios.getUri`
+13. `paramsSerializer`
+14. `validateStatus`
 
 ## 使用
 
