@@ -25,3 +25,8 @@
 > npm run dev
 >  
 > 127.0.0.1:8080
+
+
+## flg
+
+抽空进一步学习下node,完成axios在node的实现。
